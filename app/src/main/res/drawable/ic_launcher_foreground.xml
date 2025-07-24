@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+  <background>
+    <vector android:height="108.0dip" android:width="108.0dip" android:viewportWidth="108.0" android:viewportHeight="108.0">
+      <path android:fillColor="#006DBB" android:pathData="M 0 0 H 108 V 108 H 0 V 0 Z" />
+      <path
+          android:fillColor="#D3D3D3"
+          android:pathData="M47,48 h14 a2,2 0 0 1 2,2 v0 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v0 a2,2 0 0 1 2,-2 Z" />
+      <path
+          android:fillColor="#D3D3D3"
+          android:pathData="M47,56 h14 a2,2 0 0 1 2,2 v0 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v0 a2,2 0 0 1 2,-2 Z" />
+      <path
+          android:fillColor="#D3D3D3"
+          android:pathData="M54,42 A12,12 0 1,1 54,66 A12,12 0 1,1 54,42" />
+
+    </vector>
+  </background>
+  <foreground>
+    <layer-list>
+      <item>
+        <vector android:height="108.0dip" android:width="108.0dip" android:viewportWidth="108.0" android:viewportHeight="108.0">
+          <path android:fillColor="#006DBB" android:pathData="M 0 54 L 3.27 57.27 L 50.73 57.27 L 57.5 50.5 L 57.5 4.5 L 54 0 L 0 0 Z" />
+          <path android:fillColor="#006DBB" android:pathData="M 0 54 H 54 V 108 H 0 V 54 Z M 54 54 H 108 V 108 H 54 V 54 Z" />
+          <path android:fillColor="#006DBB" android:pathData="M 54 0 H 108 V 54 H 54 V 0 Z" />
+          <path
+              android:fillColor="#D3D3D3"
+              android:pathData="M47,48 h14 a2,2 0 0 1 2,2 v0 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v0 a2,2 0 0 1 2,-2 Z" />
+          <path
+              android:fillColor="#D3D3D3"
+              android:pathData="M47,56 h14 a2,2 0 0 1 2,2 v0 a2,2 0 0 1 -2,2 h-14 a2,2 0 0 1 -2,-2 v0 a2,2 0 0 1 2,-2 Z" />
+        </vector>
+      </item>
+    </layer-list>
+  </foreground>
+</adaptive-icon>
