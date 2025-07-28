@@ -5,6 +5,8 @@ import static java.lang.String.valueOf;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int limiteCaracteres = 46;
+    private boolean erro = false;
     public TextView display, screenTitle;
     public Button c, parenteses, porcentagem, div, multi, sub, soma, igual, sinal, ponto, b0, b1, b2, b3, b4, b5, b6, b7, b8, b9;
     public ImageButton delete;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         display = findViewById(R.id.display);
+        display.setFilters(new InputFilter[]{new InputFilter.LengthFilter(limiteCaracteres)});
+
         c = findViewById(R.id.button_c);
         screenTitle = findViewById(R.id.screenTitle);
         igual = findViewById(R.id.button_igual);
@@ -69,31 +75,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             numeros[i].setOnClickListener((View.OnClickListener) this);
         }
 
+
         parenteses.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (erro) {
+                    display.setText("");
+                    erro = false;
+                }
+                if (display.getText().length() >= limiteCaracteres) {
+                    display.setText("");
+                    erro = false;
+                }
+
                 String textoDisplay = display.getText().toString();
+                // Conta o número de parênteses abertos e fechados
+                int nParentesesAbertos = 0;
+                int nParentesesFechados = 0;
+                for (char c : textoDisplay.toCharArray()) {
+                    if (c == '(') {
+                        nParentesesAbertos++;
+                    } else if (c == ')') {
+                        nParentesesFechados++;
+                    }
+                }
 
                 if (textoDisplay.isEmpty()) {
                     display.setText("(");
-                } else if (textoDisplay.endsWith(")")) {
-                    display.setText(textoDisplay + "×(");
-                } else if (!("%(".contains(Character.toString(textoDisplay.charAt(textoDisplay.length() - 1))))) {
-                    if (!textoDisplay.contains("(") && !textoDisplay.contains(")")) {
-                        display.setText(textoDisplay + "(");
-                    } else if (textoDisplay.endsWith(")")) {
-                        display.setText(textoDisplay + "(");
+                } else if (nParentesesAbertos > nParentesesFechados &&
+                        !(textoDisplay.endsWith("(") || "+-×÷%.".contains(String.valueOf(textoDisplay.charAt(textoDisplay.length() - 1))))) {
+                    display.setText(textoDisplay + ")");
+                } else if (Character.isDigit(textoDisplay.charAt(textoDisplay.length() - 1)) || textoDisplay.endsWith(")")) {
+                    if (nParentesesAbertos == nParentesesFechados) {
+                        display.setText(textoDisplay + "×(");
                     } else {
-                        // Conta o número de parênteses abertos e fechados
-                        int nParentesesAbertos = textoDisplay.split("\\(").length - 1;
-                        int nParentesesFechados = textoDisplay.split("\\)").length - 1;
-
-                        if (nParentesesAbertos > nParentesesFechados) {
-                            display.setText(textoDisplay + ")");
-                        } else {
-                            display.setText(textoDisplay + "(");
-                        }
+                        display.setText(textoDisplay + "(");
                     }
+                } else if ("+-×÷%(".contains(String.valueOf(textoDisplay.charAt(textoDisplay.length() - 1)))) {
+                    display.setText(textoDisplay + "(");
                 }
             }
         });
@@ -101,7 +120,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sinal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (erro) {
+                    display.setText("");
+                    erro = false;
+                }
                 String textoDisplay = display.getText().toString();
+                if (display.getText().length() >= limiteCaracteres && !(textoDisplay.endsWith("(-"))) {
+                    return;
+                }
                 if (textoDisplay.isEmpty()) {
                     display.setText("(-");
                 } else if (textoDisplay.endsWith("(-")) {
@@ -116,6 +142,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (erro) {
+                    display.setText("");
+                    erro = false;
+                }
+                if (display.getText().length() >= limiteCaracteres) {
+                    display.setText("");
+                    erro = false;
+                }
                 String textoDisplay = display.getText().toString();
                 if (!textoDisplay.isEmpty()) {
                     String texto = textoDisplay.substring(0, textoDisplay.length() - 1);
@@ -130,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 display.setText("");
+                erro = false;
             }
         });
 
@@ -138,9 +173,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     Button bClicado = (Button) v;
+                    if (erro) {
+                        display.setText("");
+                        erro = false;
+                    }
+                    if (display.getText().length() >= limiteCaracteres) {
+                        return;
+                    }
                     String novoTexto = bClicado.getText().toString();
                     String textoDisplay = display.getText().toString();
-                    if (!textoDisplay.isEmpty() && !("+-×÷%(".contains(Character.toString(textoDisplay.charAt(textoDisplay.length() - 1))))) {
+                    if (!textoDisplay.isEmpty() && !("+-×÷%(.".contains(Character.toString(textoDisplay.charAt(textoDisplay.length() - 1))))) {
                         String texto = textoDisplay + novoTexto;
                         display.setText(texto);
                     }
@@ -151,9 +193,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     Button bClicado = (Button) v;
+                    if (erro) {
+                        display.setText("");
+                        erro = false;
+                    }
+                    if (display.getText().length() >= limiteCaracteres) {
+                        return;
+                    }
                     String novoTexto = bClicado.getText().toString();
                     String textoDisplay = display.getText().toString();
-                    if (!textoDisplay.isEmpty() && !("+-×÷%(".contains(Character.toString(textoDisplay.charAt(textoDisplay.length() - 1))))) {
+                    if (!textoDisplay.isEmpty() && !("+-×÷%(.".contains(Character.toString(textoDisplay.charAt(textoDisplay.length() - 1))))) {
                         String texto = textoDisplay + novoTexto;
                         display.setText(texto);
                     }
@@ -170,19 +219,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     try {
                         double resultado = Calcular(expressao);
                         display.setText(valueOf(resultado));
+                        erro = false;
                     } catch (IllegalArgumentException e) {
                         display.setText("Erro: " + e.getMessage());
+                        erro = true;
                     }
                 }
             }
         });
     }
 
+    @Override
     public void onClick(View v) {
         Button bClicado = (Button) v;
+        if (erro) {
+            display.setText("");
+            erro = false;
+        }
         String textoDisplay = display.getText().toString();
         String novoTexto = bClicado.getText().toString();
-
+        if (display.getText().length() >= limiteCaracteres && !(novoTexto.charAt(0) == '.' && podeColocarPonto(textoDisplay))) {
+            // Não permite adicionar se o limite foi atingido, a menos que seja um ponto válido
+            return;
+        }
         if (novoTexto.charAt(0) == '.') {
             if (podeColocarPonto(textoDisplay)) {
                 String texto = textoDisplay + novoTexto;
@@ -190,6 +249,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 display.setText(textoDisplay);
             }
+        } else if(!textoDisplay.isEmpty() && textoDisplay.charAt(textoDisplay.length() - 1) == ')') {
+            String texto = textoDisplay + '×' + novoTexto;
+            display.setText(texto);
         } else {
             String texto = textoDisplay + novoTexto;
             display.setText(texto);
@@ -349,4 +411,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         throw new IllegalArgumentException("Parênteses não balanceados.");
     }
+
 }
